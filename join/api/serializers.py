@@ -22,6 +22,20 @@ class CategorySerializer(serializers.ModelSerializer):
 		fields = '__all__'
 
 class TaskSerializer(serializers.ModelSerializer):
+
+	# assignedTo = ContactSerializer(many=True, read_only=True)
+	# assignedTo_ids = serializers.PrimaryKeyRelatedField(
+	# 	queryset = Contact.objects.all(),
+	# 	many=True,
+	# 	write_only=True,
+	# 	source = 'assignedTo'
+	# )
+	assignedTo = serializers.PrimaryKeyRelatedField(queryset=Contact.objects.all(), write_only=True)  # Nur für die Eingabe (POST/PUT)
+	contacts = serializers.StringRelatedField(source="assignedTo", many=True, read_only=True)
+
+	category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all(), write_only=True)
+	type = serializers.StringRelatedField(source="category", read_only=True)
+
 	class Meta:
 		model = Task
 		fields = '__all__'

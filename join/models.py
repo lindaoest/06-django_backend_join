@@ -7,8 +7,14 @@ class Contact(models.Model):
 	phone = models.IntegerField()
 	color = models.CharField(max_length=366, default='')
 
+	def __str__(self):
+		return self.name
+
 class Category(models.Model):
 	title = models.CharField(max_length=330)
+
+	def __str__(self):
+		return self.title
 
 class Task(models.Model):
 	title = models.CharField(max_length=30)
