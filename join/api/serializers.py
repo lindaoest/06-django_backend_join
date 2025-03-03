@@ -5,6 +5,7 @@ class ContactSerializer(serializers.Serializer):
 	name = serializers.CharField(max_length=366)
 	email = serializers.EmailField(max_length=366)
 	phone = serializers.IntegerField()
+	color = serializers.CharField()
 
 	def create(self, validated_data):
 		return Contact.objects.create(**validated_data)
@@ -13,6 +14,7 @@ class ContactSerializer(serializers.Serializer):
 		instance.name = validated_data.get('name', instance.name)
 		instance.email = validated_data.get('email', instance.email)
 		instance.phone = validated_data.get('phone', instance.phone)
+		instance.color = validated_data.get('color', instance.color)
 		instance.save()
 		return instance
 
@@ -23,15 +25,15 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class TaskSerializer(serializers.ModelSerializer):
 
-	# assignedTo = ContactSerializer(many=True, read_only=True)
-	# assignedTo_ids = serializers.PrimaryKeyRelatedField(
-	# 	queryset = Contact.objects.all(),
-	# 	many=True,
-	# 	write_only=True,
-	# 	source = 'assignedTo'
-	# )
-	assignedTo = serializers.PrimaryKeyRelatedField(queryset=Contact.objects.all(), write_only=True)  # Nur für die Eingabe (POST/PUT)
-	contacts = serializers.StringRelatedField(source="assignedTo", many=True, read_only=True)
+	assignedTo = ContactSerializer(many=True, read_only=True)
+	assignedTo_ids = serializers.PrimaryKeyRelatedField(
+		queryset = Contact.objects.all(),
+		many=True,
+		write_only=True,
+		source = 'assignedTo'
+	)
+	# assignedTo = serializers.PrimaryKeyRelatedField(queryset=Contact.objects.all(), many=True, write_only=True)  # Nur für die Eingabe (POST/PUT)
+	# contacts = serializers.StringRelatedField(source="assignedTo", many=True, read_only=True)
 
 	category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all(), write_only=True)
 	type = serializers.StringRelatedField(source="category", read_only=True)
