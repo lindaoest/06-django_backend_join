@@ -28,32 +28,32 @@ class CategorySerializer(serializers.ModelSerializer):
 		fields = '__all__'
 
 class TaskSerializer(serializers.ModelSerializer):
-	assignedTo_ids = ContactSerializer(many=True, read_only=True)
-	assignedTo = serializers.ListField(
-		child=serializers.DictField(),
-		write_only=True
-	)
+	# assignedTo_ids = ContactSerializer(many=True, read_only=True)
+	# assignedTo = serializers.ListField(
+	# 	child=serializers.DictField(),
+	# 	write_only=True
+	# )
 
-	category = serializers.CharField(write_only=True)
-	category_id = serializers.IntegerField(source="category.id", read_only=True)
+	category = serializers.CharField()
+	# category_id = serializers.IntegerField(source="category.id", read_only=True)
 
 	def create(self, validated_data):
-		print('category', validated_data)
-		contacts_data = validated_data.pop('assignedTo', [])
+		# print('category', validated_data)
+		contacts_data = validated_data.pop('assignedTo')
 		category_data = validated_data.pop('category', '')
-		assigned_contacts = []
+		# assigned_contacts = []
 
-		for contact in contacts_data:
-			contact_id = Contact.objects.get(pk=contacts_data.id)
-			print('id', contact_id)
-			assigned_contacts.append(contact.get('id'))
+		# for contact in contacts_data:
+		# 	contact_id = Contact.objects.get(id=contacts_data.id)
+		# 	print('id', contact_id)
+		# 	assigned_contacts.append(contact.get('id'))
 
 		category = Category.objects.get(title=category_data)
 
 		task = Task.objects.create(category=category, **validated_data)
-		task.assignedTo.set(assigned_contacts)
+		task.assignedTo.set(contacts_data)
 
-		print('assigned_contacts', assigned_contacts)
+		# print('assigned_contacts', assigned_contacts)
 		print('task', task)
 
 		return task
