@@ -68,7 +68,19 @@ class TaskSerializer(serializers.ModelSerializer):
 		model = Task
 		fields = '__all__'
 
-class SummarySerializer(serializers.Serializer):
+class SummarySerializer(serializers.ModelSerializer):
+
+	toDo = serializers.SerializerMethodField()
+
+	def get_toDo(self, obj):
+		count = 0
+		tasks = Task.objects.all()
+
+		for task in tasks:
+			if task.status == 'to-do':
+				count += 1
+
+		return count
 	class Meta:
 		model = Summary
 		fields = '__all__'

@@ -63,30 +63,38 @@ class SummaryViewSet(viewsets.ViewSet):
 	queryset = Summary.objects.all()
 
 	def list(self, request):
+		toDo = 0
+		done = 0
+		tasksInProgress = 0
+		awaitingFeedback = 0
+
+		urgent = 0
+
+		tasksInBoard = Task.objects.count()
+
+		tasks = Task.objects.all()
+
+		for task in tasks:
+			if task.status == 'to-do':
+				toDo += 1
+			elif task.status == 'done':
+				done += 1
+			elif task.status == 'tasks-in-progress':
+				tasksInProgress += 1
+			elif task.status == 'awaiting-feedback':
+				awaitingFeedback += 1
+
+			if task.priority == 'urgent':
+				urgent += 1
+
 		serializer = SummarySerializer(self.queryset, many=True)
-		return Response(serializer.data)
 
-	def retrieve(self, request, pk=None):
-		task = get_object_or_404(self.queryset, pk=pk)
-		serializer = SummarySerializer(task)
-		return Response(serializer.data)
-
-	def create(self, request):
-		serializer = SummarySerializer(data=request.data)
-		if serializer.is_valid():
-			serializer.save()
-			return Response(serializer.data, status=status.HTTP_201_CREATED)
-		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-	def update(self, request, pk=None):
-		task = self.queryset.get(pk=pk)
-		serializer = SummarySerializer(task, data=request.data)
-		if serializer.is_valid():
-			serializer.save()
-			return Response(serializer.data)
-		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-	def destroy(self, request, pk=None):
-		task = self.queryset.get(pk=pk)
-		task.delete()
-		return Response(task)
+		data = {
+			"to-do": toDo,
+			"done": done,
+			"tasks-in-progress": tasksInProgress,
+			"awaiting-feedback": awaitingFeedback,
+			"urgent": urgent,
+			"tasks-in-board": tasksInBoard
+		}
+		return Response(data)
