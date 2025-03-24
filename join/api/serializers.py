@@ -34,6 +34,9 @@ class TaskSerializer(serializers.ModelSerializer):
 	# 	write_only=True
 	# )
 
+	assignedTo = serializers.PrimaryKeyRelatedField(queryset=Contact.objects.all(),many=True, write_only=True)
+	# contacts = serializers.StringRelatedField(source='contact', many=True, read_only=True)
+	contacts = serializers.SerializerMethodField()
 	category = serializers.CharField()
 	# category_id = serializers.IntegerField(source="category.id", read_only=True)
 
@@ -52,6 +55,7 @@ class TaskSerializer(serializers.ModelSerializer):
 
 		task = Task.objects.create(category=category, **validated_data)
 		task.assignedTo.set(contacts_data)
+		# task.contacts.set(contacts_data)
 
 		# print('assigned_contacts', assigned_contacts)
 		print('task', task)
@@ -66,7 +70,10 @@ class TaskSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Task
-		fields = '__all__'
+		fields = ['id', 'category', 'title', 'description', 'date', 'priority', 'subtasks', 'status', 'contacts', 'assignedTo']
+
+	def get_contacts(self, obj):
+		return [contact.name for contact in obj.assignedTo.all()]
 
 class SummarySerializer(serializers.ModelSerializer):
 
