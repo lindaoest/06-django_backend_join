@@ -70,7 +70,7 @@ class TaskSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Task
-		fields = ['id', 'category', 'title', 'description', 'date', 'priority', 'subtasks', 'status', 'contacts', 'assignedTo']
+		fields = ['id', 'category', 'title', 'description', 'date', 'priority', 'finishedSubtasks', 'subtasks', 'status', 'contacts', 'assignedTo']
 
 	def get_contacts(self, obj):
 		return [contact.name for contact in obj.assignedTo.all()]

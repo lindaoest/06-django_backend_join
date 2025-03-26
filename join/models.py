@@ -24,6 +24,7 @@ class Task(models.Model):
 	assignedTo = models.ManyToManyField(Contact, related_name='contact')
 	category = models.ForeignKey(Category, related_name='category', on_delete=models.CASCADE)
 	subtasks = models.JSONField(null=True)
+	finishedSubtasks = models.JSONField(default=list, blank=True)
 	status = models.CharField(max_length=366)
 
         # 'assign-to': checkedContacts,
