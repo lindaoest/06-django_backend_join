@@ -9,8 +9,8 @@ router.register(r'summary', SummaryViewSet)
 
 urlpatterns = [
     path('contacts/', ContactsListView.as_view()),
-    path('contacts/<int:pk>', ContactsDetailView.as_view()),
+    path('contacts/<int:pk>/', ContactsDetailView.as_view()),
 	path('categories/', CategoryListView.as_view()),
-    path('categories/<int:pk>', CategoryDetailView.as_view()),
+    path('categories/<int:pk>/', CategoryDetailView.as_view()),
 	path('', include(router.urls)),
 ]
