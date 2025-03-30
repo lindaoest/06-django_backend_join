@@ -77,14 +77,14 @@ class SummaryViewSet(viewsets.ViewSet):
 		for task in tasks:
 			if task.status == 'to-do':
 				toDo += 1
-			elif task.status == 'done':
+			elif task.status == 'done-tasks':
 				done += 1
-			elif task.status == 'tasks-in-progress':
+			elif task.status == 'in-progress':
 				tasksInProgress += 1
-			elif task.status == 'awaiting-feedback':
+			elif task.status == 'await-feedback':
 				awaitingFeedback += 1
 
-			if task.priority == 'urgent':
+			if task.priority == 'Urgent':
 				urgent += 1
 
 		serializer = SummarySerializer(self.queryset, many=True)

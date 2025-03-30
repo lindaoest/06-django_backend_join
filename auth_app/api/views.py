@@ -1,11 +1,13 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import permissions
 from rest_framework.permissions import AllowAny
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from django.contrib.auth import authenticate
 from .serializers import RegistrationSerializer
+from django.contrib.auth.models import User
 
 class RegistrationView(APIView):
 	permission_classes = [AllowAny]
@@ -51,3 +53,20 @@ class LoginView(ObtainAuthToken):
 			}
 
 		return Response(data, status=status.HTTP_201_CREATED)
+
+class GuestProfile(APIView):
+
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        guest_username = "Guest"
+        guest_user = User.objects.create(username=guest_username, is_active=True)
+        Token.objects.filter(user=guest_user).delete()
+        token = Token.objects.create(user=guest_user)
+
+        data = {
+            "token": token.key,
+            "username": guest_user.username,
+        }
+
+        return Response(data, status=status.HTTP_201_CREATED)
