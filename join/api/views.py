@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from rest_framework import generics
 from rest_framework.views import APIView
-from ..models import Contact, Category, Task, Summary
-from .serializers import ContactSerializer, CategorySerializer, TaskSerializer, SummarySerializer
+from ..models import Contact, Category, Task
+from .serializers import ContactSerializer, CategorySerializer, TaskSerializer
 from rest_framework import status, viewsets
 from rest_framework.response import Response
 from django.http import Http404
@@ -60,8 +60,6 @@ class TaskViewSet(viewsets.ModelViewSet):
 	serializer_class = TaskSerializer
 
 class SummaryViewSet(viewsets.ViewSet):
-	queryset = Summary.objects.all()
-
 	def list(self, request):
 		toDo = 0
 		done = 0
@@ -86,8 +84,6 @@ class SummaryViewSet(viewsets.ViewSet):
 
 			if task.priority == 'Urgent':
 				urgent += 1
-
-		serializer = SummarySerializer(self.queryset, many=True)
 
 		data = {
 			"to-do": toDo,

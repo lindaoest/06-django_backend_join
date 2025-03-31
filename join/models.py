@@ -27,16 +27,5 @@ class Task(models.Model):
 	finishedSubtasks = models.JSONField(default=list, blank=True)
 	status = models.CharField(max_length=366)
 
-        # 'assign-to': checkedContacts,
-        # 'finishedSubtasks': finishedSubtasks,
-
 	def __str__(self):
 		return self.title
-
-class Summary(models.Model):
-	toDo = models.IntegerField()
-	done = models.IntegerField()
-	urgent = models.IntegerField()
-	tasksInBoard = models.IntegerField()
-	tasksInProgress = models.IntegerField()
-	awaitingFeedback = models.IntegerField()
