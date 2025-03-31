@@ -60,7 +60,7 @@ class GuestProfile(APIView):
 
     def post(self, request):
         guest_username = "Guest"
-        guest_user = User.objects.create(username=guest_username, is_active=True)
+        guest_user, created = User.objects.get_or_create(username=guest_username, is_active=True)
         Token.objects.filter(user=guest_user).delete()
         token = Token.objects.create(user=guest_user)
 

@@ -59,8 +59,8 @@ class TaskViewSet(viewsets.ModelViewSet):
 	queryset = Task.objects.all()
 	serializer_class = TaskSerializer
 
-class SummaryViewSet(viewsets.ViewSet):
-	def list(self, request):
+class SummaryView(APIView):
+	def get(self, request):
 		toDo = 0
 		done = 0
 		tasksInProgress = 0
