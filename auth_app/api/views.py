@@ -10,11 +10,14 @@ from .serializers import RegistrationSerializer
 from django.contrib.auth.models import User
 
 class RegistrationView(APIView):
-	permission_classes = [AllowAny]
+	permission_classes = [permissions.AllowAny]
 
 	data = {}
 
 	def post(self, request):
+
+		print(request.data)
+
 		serializer = RegistrationSerializer(data=request.data)
 		if serializer.is_valid():
 			user = serializer.save()
@@ -30,7 +33,7 @@ class RegistrationView(APIView):
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class LoginView(ObtainAuthToken):
-	permission_classes = [AllowAny]
+	permission_classes = [permissions.AllowAny]
 
 	data = {}
 
