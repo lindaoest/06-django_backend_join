@@ -5,7 +5,7 @@ class ContactSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Contact
-		fields = ['id', 'name', 'email', 'phone', 'color']
+		fields = '__all__'
 
 class CategorySerializer(serializers.ModelSerializer):
 	class Meta:
@@ -14,12 +14,12 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class TaskSerializer(serializers.ModelSerializer):
 
-	assignedTo = serializers.PrimaryKeyRelatedField(queryset=Contact.objects.all(),many=True, write_only=True)
-	contacts = serializers.SerializerMethodField()
+	assignedTo = serializers.PrimaryKeyRelatedField(queryset=Contact.objects.all(), many=True, write_only=True)
+	contacts = serializers.SerializerMethodField(read_only=True)
 	category = serializers.CharField()
 
 	def create(self, validated_data):
-		contacts_data = validated_data.pop('assignedTo')
+		contacts_data = validated_data.pop('assignedTo', '')
 		category_data = validated_data.pop('category', '')
 
 		category, _ = Category.objects.get_or_create(title=category_data)
@@ -30,7 +30,7 @@ class TaskSerializer(serializers.ModelSerializer):
 		return task
 
 	def update(self, instance, validated_data):
-		contacts_data = validated_data.pop('assignedTo')
+		contacts_data = validated_data.pop('assignedTo', '')
 		category_data = validated_data.pop('category', '')
 
 		category = Category.objects.get(title=category_data)

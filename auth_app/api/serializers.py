@@ -12,6 +12,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
 
     def validate_username(self, value):
+
         if ' ' in value:
             raise serializers.ValidationError({"message": "Der Username darf keine Leerzeichen beeinhalten."})
         return value
@@ -25,10 +26,10 @@ class RegistrationSerializer(serializers.ModelSerializer):
         if (pw != repeated_password):
             raise serializers.ValidationError({"message": "Password stimmt nicht überein"})
 
-        if (User.objects.filter(email=validated_data["email"])):
+        if (User.objects.filter(email=email)):
             raise serializers.ValidationError({"message": "Diese Email gibt es bereits"})
 
-        user = User(username=validated_data["username"], email=validated_data["email"])
+        user = User(username=validated_data["username"], email=email)
         user.set_password(validated_data["password"])
         user.save()
         return user
