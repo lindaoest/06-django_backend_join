@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import PROTECT
 
 # Create your models here.
 class Contact(models.Model):
@@ -22,7 +23,7 @@ class Task(models.Model):
 	date = models.DateField()
 	priority = models.CharField(max_length=366)
 	assignedTo = models.ManyToManyField(Contact, related_name='contact')
-	category = models.ForeignKey(Category, related_name='category', on_delete=models.CASCADE)
+	category = models.ForeignKey(Category, related_name='category', on_delete=PROTECT) # Category cannot be deleted
 	subtasks = models.JSONField(null=True)
 	finishedSubtasks = models.JSONField(default=list, blank=True)
 	status = models.CharField(max_length=366)
